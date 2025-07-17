@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "972859395681",
+    "project_id": "handy-talk",
+    "storage_bucket": "handy-talk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972859395681:android:b9cab3a7de1f0f0678e420",
+        "android_client_info": {
+          "package_name": "com.example.handy_talk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972859395681-161d9ajdt3ebtd3o2caqg73kv4jd0mc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.handy_talk",
+            "certificate_hash": "c8a0169bde31c2770cd79e02c166212818b1d159"
+          }
+        },
+        {
+          "client_id": "972859395681-735tbstvm2nlocb792ei6t396ftbk77r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALVaSISPGfppDXYef8Tz6pctsNNm5j--Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972859395681-735tbstvm2nlocb792ei6t396ftbk77r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "972859395681-slfecpc2rkjm7pvp895l6kqccm9g6ij3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.handyTalk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
