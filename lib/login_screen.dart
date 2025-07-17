@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,7 +39,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 48),
               // 구글 로그인 버튼
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () => signInWithGoogle(context),
                 icon: const Icon(Icons.g_mobiledata, size: 32, color: Colors.black),
                 label: const Text('구글로 로그인', style: TextStyle(fontSize: 18, color: Colors.black)),
                 style: ElevatedButton.styleFrom(
@@ -80,4 +82,28 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}
+
+Future<UserCredential?> signInWithGoogle(BuildContext context) async {
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return null;
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+    );
+
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    Navigator.pushReplacementNamed(context, '/profile');
+    return userCredential;
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('구글 로그인 실패: $e')),
+    );
+    return null;
+  }
+}
