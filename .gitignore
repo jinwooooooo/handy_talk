@@ -49,3 +49,4 @@ android/app/google-services.json
 android/build/
 .env
 android/app/src/main/AndroidManifest.xml
+ios/Runner/Info.plist
