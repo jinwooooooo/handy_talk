@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 import 'login_screen.dart';
 import 'profile_screen.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await Firebase.initializeApp();
+  KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']!); // 하이픈(-) 없이!
   runApp(const MyApp());
 }
 

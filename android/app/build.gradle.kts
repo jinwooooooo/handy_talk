@@ -33,6 +33,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        val kakaoKey: String = project.findProperty("KAKAO_NATIVE_APP_KEY") as? String ?: ""
+        resValue("string", "kakao_native_app_key", kakaoKey)
     }
 
     buildTypes {
