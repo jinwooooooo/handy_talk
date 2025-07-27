@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> kakaoLogin() async {
     try {
+      // 1. 카카오 로그인
       OAuthToken token;
       if (await isKakaoTalkInstalled()) {
         token = await UserApi.instance.loginWithKakaoTalk();
@@ -44,7 +47,35 @@ class _LoginScreenState extends State<LoginScreen> {
         token = await UserApi.instance.loginWithKakaoAccount();
       }
       print('카카오 로그인 성공! 액세스 토큰: ${token.accessToken}');
-      Navigator.pushReplacementNamed(context, '/profile');
+
+      // 2. Cloud Function 호출하여 Firebase Custom Token 획득
+      final response = await http.post(
+        Uri.parse('https://us-central1-handy-talk.cloudfunctions.net/kakaoCustomAuth'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'accessToken': token.accessToken,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final customToken = data['customToken'];
+        print('Firebase Custom Token 획득 성공!');
+
+        // 3. Firebase Authentication에 Custom Token으로 로그인
+        final userCredential = await FirebaseAuth.instance.signInWithCustomToken(customToken);
+        print('Firebase Authentication 로그인 성공! UID: ${userCredential.user?.uid}');
+
+        // 4. 프로필 화면으로 이동
+        Navigator.pushReplacementNamed(context, '/profile');
+      } else {
+        print('Cloud Function 호출 실패: ${response.statusCode} - ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('서버 인증 실패: ${response.statusCode}')),
+        );
+      }
     } catch (e) {
       print('카카오 로그인 실패: $e');
       ScaffoldMessenger.of(context).showSnackBar(
